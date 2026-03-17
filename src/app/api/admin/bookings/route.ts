@@ -29,3 +29,29 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(bookings);
 }
+
+export async function PUT(request: NextRequest) {
+  const { id, status } = await request.json();
+
+  if (!id || !status) {
+    return NextResponse.json(
+      { error: "id and status are required" },
+      { status: 400 }
+    );
+  }
+
+  const validStatuses = ["PENDING", "AWAITING_CONFIRM", "CONFIRMED", "CANCELLED", "COMPLETED"];
+  if (!validStatuses.includes(status)) {
+    return NextResponse.json(
+      { error: "Invalid status" },
+      { status: 400 }
+    );
+  }
+
+  const booking = await prisma.booking.update({
+    where: { id },
+    data: { status },
+  });
+
+  return NextResponse.json(booking);
+}

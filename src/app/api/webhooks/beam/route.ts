@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
 
   try {
     if (status === "completed" || status === "success") {
-      // Update booking to CONFIRMED
+      // Payment received — awaiting owner confirmation
       const booking = await prisma.booking.update({
         where: { id: orderId },
-        data: { status: "CONFIRMED" },
+        data: { status: "AWAITING_CONFIRM" },
         include: {
           user: true,
           service: true,

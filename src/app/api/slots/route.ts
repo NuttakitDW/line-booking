@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       date: { gte: bangkokNow },
       bookings: {
         none: {
-          status: { in: ["PENDING", "CONFIRMED"] },
+          status: { in: ["PENDING", "AWAITING_CONFIRM", "CONFIRMED"] },
         },
       },
     },

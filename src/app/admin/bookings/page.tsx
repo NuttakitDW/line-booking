@@ -14,9 +14,10 @@ interface Booking {
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   PENDING: { label: "รอชำระ", color: "bg-amber-100 text-amber-700" },
+  AWAITING_CONFIRM: { label: "รอยืนยัน", color: "bg-blue-100 text-blue-700" },
   CONFIRMED: { label: "ยืนยันแล้ว", color: "bg-green-100 text-green-700" },
   CANCELLED: { label: "ยกเลิก", color: "bg-red-100 text-red-700" },
-  COMPLETED: { label: "เสร็จสิ้น", color: "bg-blue-100 text-blue-700" },
+  COMPLETED: { label: "เสร็จสิ้น", color: "bg-gray-100 text-gray-600" },
 };
 
 function formatPrice(satang: number): string {
@@ -28,7 +29,7 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("");
 
-  useEffect(() => {
+  function fetchBookings() {
     const params = new URLSearchParams();
     if (statusFilter) params.set("status", statusFilter);
 
@@ -36,7 +37,20 @@ export default function BookingsPage() {
       .then((r) => r.json())
       .then((data) => setBookings(data))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    fetchBookings();
   }, [statusFilter]);
+
+  async function handleUpdateStatus(id: string, status: string) {
+    await fetch(`/api/admin/bookings`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    fetchBookings();
+  }
 
   if (loading) {
     return (
@@ -60,6 +74,7 @@ export default function BookingsPage() {
         >
           <option value="">ทั้งหมด</option>
           <option value="PENDING">รอชำระ</option>
+          <option value="AWAITING_CONFIRM">รอยืนยัน</option>
           <option value="CONFIRMED">ยืนยันแล้ว</option>
           <option value="CANCELLED">ยกเลิก</option>
           <option value="COMPLETED">เสร็จสิ้น</option>
@@ -94,9 +109,37 @@ export default function BookingsPage() {
                   {b.timeSlot.startTime} - {b.timeSlot.endTime} |{" "}
                   {formatPrice(b.totalPrice)}
                 </p>
-                <p className="text-xs text-gray-300 mt-0.5">
-                  ID: {b.id.slice(0, 8)}
-                </p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-gray-300">
+                    ID: {b.id.slice(-6).toUpperCase()}
+                  </p>
+                  <div className="flex gap-2">
+                    {b.status === "AWAITING_CONFIRM" && (
+                      <>
+                        <button
+                          onClick={() => handleUpdateStatus(b.id, "CONFIRMED")}
+                          className="text-xs bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition-colors"
+                        >
+                          ยืนยัน
+                        </button>
+                        <button
+                          onClick={() => handleUpdateStatus(b.id, "CANCELLED")}
+                          className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          ปฏิเสธ
+                        </button>
+                      </>
+                    )}
+                    {b.status === "CONFIRMED" && (
+                      <button
+                        onClick={() => handleUpdateStatus(b.id, "COMPLETED")}
+                        className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        เสร็จสิ้น
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}

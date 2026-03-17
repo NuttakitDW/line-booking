@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
         },
         include: {
           bookings: {
-            where: { status: { in: ["PENDING", "CONFIRMED"] } },
+            where: { status: { in: ["PENDING", "AWAITING_CONFIRM", "CONFIRMED"] } },
           },
         },
       });
@@ -78,17 +78,23 @@ export async function POST(request: NextRequest) {
       description: `จองคิว ${service.name} - พี่แกงส้ม`,
     });
 
-    // Store payment reference
     if (paymentRef) {
+      // Store payment reference
       await prisma.booking.update({
         where: { id: booking.id },
         data: { paymentRef },
+      });
+    } else if (!paymentUrl) {
+      // No payment gateway — skip payment, go straight to awaiting confirmation
+      await prisma.booking.update({
+        where: { id: booking.id },
+        data: { status: "AWAITING_CONFIRM" },
       });
     }
 
     return NextResponse.json({
       bookingId: booking.id,
-      status: booking.status,
+      status: paymentUrl ? "PENDING" : "AWAITING_CONFIRM",
       paymentUrl: paymentUrl || undefined,
     });
   } catch (err) {

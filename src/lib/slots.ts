@@ -71,7 +71,7 @@ export async function getAvailableDatesForMonth(
   // Fetch bookings for this month to check slot availability
   const bookings = await prisma.booking.findMany({
     where: {
-      status: { in: ["PENDING", "CONFIRMED"] },
+      status: { in: ["PENDING", "AWAITING_CONFIRM", "CONFIRMED"] },
       timeSlot: {
         date: { gte: firstDay, lte: lastDay },
       },
@@ -161,7 +161,7 @@ export async function getAvailableSlotsForDate(
   // Get all booked slots for this date
   const bookings = await prisma.booking.findMany({
     where: {
-      status: { in: ["PENDING", "CONFIRMED"] },
+      status: { in: ["PENDING", "AWAITING_CONFIRM", "CONFIRMED"] },
       timeSlot: { date },
     },
     include: { timeSlot: true },

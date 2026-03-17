@@ -12,6 +12,7 @@ model User {
   lineUserId    String    @unique @map("line_user_id")
   displayName   String    @map("display_name")
   pictureUrl    String?   @map("picture_url")
+  phone         String?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   bookings      Booking[]
@@ -67,8 +68,9 @@ model Booking {
 }
 
 enum BookingStatus {
-  PENDING
-  CONFIRMED
+  PENDING            // รอชำระ
+  AWAITING_CONFIRM   // รอยืนยัน (paid, waiting for owner)
+  CONFIRMED          // ยืนยัน (owner approved)
   CANCELLED
   COMPLETED
 }

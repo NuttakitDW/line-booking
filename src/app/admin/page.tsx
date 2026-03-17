@@ -26,12 +26,14 @@ export default function AdminDashboardPage() {
   const todayBookings = bookings.filter(
     (b) =>
       b.timeSlot.date.startsWith(today) &&
-      (b.status === "CONFIRMED" || b.status === "PENDING")
+      ["PENDING", "AWAITING_CONFIRM", "CONFIRMED"].includes(b.status)
   );
   const confirmedCount = bookings.filter(
     (b) => b.status === "CONFIRMED"
   ).length;
-  const pendingCount = bookings.filter((b) => b.status === "PENDING").length;
+  const awaitingCount = bookings.filter(
+    (b) => b.status === "AWAITING_CONFIRM"
+  ).length;
 
   if (loading) {
     return (
@@ -65,9 +67,9 @@ export default function AdminDashboardPage() {
           </p>
         </div>
         <div className="bg-white rounded-xl p-5 shadow-sm">
-          <p className="text-sm text-gray-400">รอชำระ</p>
-          <p className="text-3xl font-bold text-amber-500 mt-1">
-            {pendingCount}
+          <p className="text-sm text-gray-400">รอยืนยัน</p>
+          <p className="text-3xl font-bold text-blue-500 mt-1">
+            {awaitingCount}
           </p>
         </div>
       </div>
@@ -91,10 +93,12 @@ export default function AdminDashboardPage() {
                 className={`text-xs px-2 py-1 rounded-full ${
                   b.status === "CONFIRMED"
                     ? "bg-green-100 text-green-700"
-                    : "bg-amber-100 text-amber-700"
+                    : b.status === "AWAITING_CONFIRM"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-amber-100 text-amber-700"
                 }`}
               >
-                {b.status === "CONFIRMED" ? "ยืนยันแล้ว" : "รอชำระ"}
+                {b.status === "CONFIRMED" ? "ยืนยันแล้ว" : b.status === "AWAITING_CONFIRM" ? "รอยืนยัน" : "รอชำระ"}
               </span>
             </div>
           ))}
