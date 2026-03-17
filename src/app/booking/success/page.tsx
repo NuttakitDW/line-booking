@@ -89,11 +89,11 @@ function SuccessContent() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
       <div className="text-6xl mb-6">✅</div>
       <h1 className="text-2xl font-bold mb-2">จองสำเร็จ!</h1>
-      <p className="text-[var(--color-text-secondary)] mb-2">
+      <p className="text-text-secondary mb-2">
         ขอบคุณที่จองคิวกับพี่แกงส้มค่ะ
       </p>
       {bookingId && (
-        <p className="text-sm text-[var(--color-text-secondary)]">
+        <p className="text-sm text-text-secondary">
           รหัสการจอง: {bookingId.slice(-6).toUpperCase()}
         </p>
       )}
@@ -110,7 +110,7 @@ function SuccessContent() {
             value={formatPhoneDisplay(phone)}
             onChange={handlePhoneChange}
             placeholder="0xx-xxx-xxxx"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-lg tracking-wider focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center text-lg tracking-wider focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
           {phoneError && (
             <p className="text-red-500 text-xs mt-2">{phoneError}</p>
@@ -118,14 +118,14 @@ function SuccessContent() {
           <button
             onClick={handleSubmitPhone}
             disabled={saving || phone.length < 10}
-            className="w-full mt-3 bg-[var(--color-primary)] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50 active:scale-[0.98]"
+            className="w-full mt-3 bg-primary text-white py-3 rounded-xl font-semibold text-sm hover:bg-primary-dark transition-colors disabled:opacity-50 active:scale-[0.98]"
           >
             {saving ? "กำลังบันทึก..." : "ยืนยัน"}
           </button>
         </div>
       ) : (
         <>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-4">
+          <p className="text-sm text-text-secondary mt-4">
             คุณจะได้รับข้อความยืนยันผ่าน LINE ค่ะ
           </p>
           <p className="text-sm text-gray-400 mt-6">

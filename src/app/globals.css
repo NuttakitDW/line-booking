@@ -1,18 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #06C755;
-  --color-primary-dark: #05a648;
-  --color-background: #f8f9fa;
+  --color-primary: #CC0000;
+  --color-primary-dark: #A30000;
+  --color-primary-light: #FCE4E4;
+  --color-background: #FFF9F9;
   --color-surface: #ffffff;
-  --color-text: #1a1a1a;
-  --color-text-secondary: #6b7280;
+  --color-text: #1A1A1B;
+  --color-text-secondary: #666666;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @theme inline {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-text);
+  --color-primary: #CC0000;
+  --color-primary-dark: #A30000;
+  --color-primary-light: #FCE4E4;
+  --color-background: #FFF9F9;
+  --color-foreground: #1A1A1B;
+  --color-text-secondary: #666666;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -30,7 +35,7 @@ body {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background: linear-gradient(90deg, #f0d0d0 25%, #fce4e4 50%, #f0d0d0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;

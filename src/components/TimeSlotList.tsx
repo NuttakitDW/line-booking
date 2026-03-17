@@ -54,7 +54,7 @@ export function TimeSlotList({ date, slots, loading, onSelect }: Props) {
           <button
             key={slot.startTime}
             onClick={() => onSelect(slot)}
-            className="bg-white rounded-xl py-3 px-4 text-center shadow-sm border-2 border-transparent hover:border-[var(--color-primary)] hover:shadow-md transition-all active:scale-[0.96]"
+            className="bg-white rounded-xl py-3 px-4 text-center shadow-sm border-2 border-transparent hover:border-primary hover:shadow-md transition-all active:scale-[0.96]"
           >
             <p className="font-semibold text-sm">{slot.startTime}</p>
             <p className="text-xs text-gray-400">- {slot.endTime}</p>

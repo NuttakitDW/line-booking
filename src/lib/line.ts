@@ -34,7 +34,7 @@ export async function sendBookingReceipt(
           header: {
             type: "box",
             layout: "vertical",
-            backgroundColor: "#06C755",
+            backgroundColor: "#CC0000",
             paddingAll: "20px",
             contents: [
               {
@@ -156,7 +156,7 @@ export async function sendBookingReceipt(
                     text: formatPrice(receipt.totalPrice),
                     size: "xl",
                     weight: "bold",
-                    color: "#06C755",
+                    color: "#CC0000",
                     align: "end",
                   },
                 ],
@@ -169,7 +169,7 @@ export async function sendBookingReceipt(
             contents: [
               {
                 type: "text",
-                text: "ขอบคุณที่ใช้บริการค่ะ 💚",
+                text: "ขอบคุณที่ใช้บริการค่ะ",
                 size: "sm",
                 color: "#888888",
                 align: "center",

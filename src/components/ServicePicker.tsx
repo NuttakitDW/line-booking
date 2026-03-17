@@ -15,6 +15,7 @@ interface Props {
 }
 
 function formatPrice(satang: number): string {
+  if (satang === 0) return "ติดต่อสอบถาม";
   return `฿${(satang / 100).toLocaleString()}`;
 }
 
@@ -35,7 +36,7 @@ export function ServicePicker({ services, loading, onSelect }: Props) {
 
   if (services.length === 0) {
     return (
-      <div className="text-center py-12 text-[var(--color-text-secondary)]">
+      <div className="text-center py-12 text-text-secondary">
         <p className="text-4xl mb-3">📋</p>
         <p>ยังไม่มีบริการในขณะนี้</p>
       </div>
@@ -43,29 +44,34 @@ export function ServicePicker({ services, loading, onSelect }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {services.map((service) => (
         <button
           key={service.id}
           onClick={() => onSelect(service)}
-          className="w-full bg-white rounded-2xl p-5 shadow-sm text-left hover:shadow-md transition-shadow active:scale-[0.98]"
+          className="w-full bg-white rounded-2xl p-5 shadow-sm text-left hover:shadow-md border border-transparent hover:border-primary-light transition-all active:scale-[0.98]"
         >
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="font-semibold text-lg">{service.name}</h3>
+          <div className="flex justify-between items-center">
+            <div className="flex-1">
+              <h3 className="font-semibold text-base text-foreground">
+                {service.name}
+              </h3>
               {service.description && (
-                <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   {service.description}
                 </p>
               )}
-              <p className="text-sm text-[var(--color-text-secondary)] mt-2">
-                ⏱ {service.durationMin} นาที
+              <p className="text-xs text-text-secondary mt-2">
+                {service.durationMin} นาที
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-lg font-bold text-[var(--color-primary)]">
+            <div className="text-right ml-4">
+              <p className="text-sm font-bold text-primary">
                 {formatPrice(service.price)}
               </p>
+              <span className="text-xs text-primary opacity-60">
+                เลือก →
+              </span>
             </div>
           </div>
         </button>

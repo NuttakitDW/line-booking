@@ -19,8 +19,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "จองคิวพี่แกงส้ม",
-  description: "ระบบจองคิวพี่แกงส้ม - Book with P'Som",
+  title: "จองคิวโค้ชแกงส้ม | Feng Shui Master Coach",
+  description: "ระบบจองคิวโค้ชแกงส้ม - ผ่าดวง จัดฮวงจุ้ย หาฤกษ์ยาม Private Coaching",
 };
 
 export default function RootLayout({

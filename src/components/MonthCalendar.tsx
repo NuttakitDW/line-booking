@@ -147,16 +147,16 @@ export function MonthCalendar({
               onClick={() => onDateSelect(dateStr)}
               className={`
                 relative w-full aspect-square flex flex-col items-center justify-center rounded-full text-sm transition-all
-                ${isSelected ? "bg-[var(--color-primary)] text-white font-semibold" : ""}
-                ${!isSelected && isToday ? "ring-2 ring-[var(--color-primary)] ring-inset" : ""}
-                ${!isSelected && isAvailable ? "hover:bg-[var(--color-primary)]/10 cursor-pointer font-medium" : ""}
+                ${isSelected ? "bg-primary text-white font-semibold" : ""}
+                ${!isSelected && isToday ? "ring-2 ring-primary ring-inset" : ""}
+                ${!isSelected && isAvailable ? "hover:bg-primary/10 cursor-pointer font-medium" : ""}
                 ${isPast || !isAvailable ? "text-gray-300 cursor-not-allowed" : ""}
                 ${!isPast && !isSelected && isAvailable ? "text-gray-800" : ""}
               `}
             >
               {day}
               {isAvailable && !isSelected && (
-                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[var(--color-primary)]" />
+                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
               )}
             </button>
           );
