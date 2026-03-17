@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: booking
+      POSTGRES_PASSWORD: booking_som_db_2026
+      POSTGRES_DB: booking_som
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U booking -d booking_som"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://booking:booking_som_db_2026@db:5432/booking_som"
+      NEXT_PUBLIC_LIFF_ID: "${NEXT_PUBLIC_LIFF_ID:-2009468965-EGRhMQlZ}"
+      NEXT_PUBLIC_BASE_URL: "${NEXT_PUBLIC_BASE_URL:-http://localhost:3000}"
+      LINE_CHANNEL_ACCESS_TOKEN: "${LINE_CHANNEL_ACCESS_TOKEN:-}"
+      LINE_CHANNEL_SECRET: "${LINE_CHANNEL_SECRET:-}"
+      BEAM_API_KEY: "${BEAM_API_KEY:-}"
+      BEAM_SECRET_KEY: "${BEAM_SECRET_KEY:-}"
+      ADMIN_JWT_SECRET: "${ADMIN_JWT_SECRET:-docker-dev-secret-change-me}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-admin123}"
+
+volumes:
+  pgdata:
