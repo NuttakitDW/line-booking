@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  lineUserId    String    @unique @map("line_user_id")
+  displayName   String    @map("display_name")
+  pictureUrl    String?   @map("picture_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  bookings      Booking[]
+
+  @@map("users")
+}
+
+model Service {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  durationMin   Int       @map("duration_min")
+  price         Int       // in satang (THB * 100)
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  bookings      Booking[]
+
+  @@map("services")
+}
+
+model TimeSlot {
+  id            String    @id @default(cuid())
+  date          DateTime  @db.Date
+  startTime     String    @map("start_time") // "09:00" format
+  endTime       String    @map("end_time")   // "10:00" format
+  available     Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  bookings      Booking[]
+
+  @@unique([date, startTime])
+  @@map("time_slots")
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  userId        String        @map("user_id")
+  serviceId     String        @map("service_id")
+  timeSlotId    String        @map("time_slot_id")
+  status        BookingStatus @default(PENDING)
+  totalPrice    Int           @map("total_price") // in satang
+  paymentRef    String?       @map("payment_ref")
+  note          String?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user          User          @relation(fields: [userId], references: [id])
+  service       Service       @relation(fields: [serviceId], references: [id])
+  timeSlot      TimeSlot      @relation(fields: [timeSlotId], references: [id])
+
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
