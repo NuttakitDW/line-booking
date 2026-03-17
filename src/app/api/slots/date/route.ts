@@ -13,5 +13,7 @@ export async function GET(request: NextRequest) {
   }
 
   const slots = await getAvailableSlotsForDate(date);
-  return NextResponse.json(slots);
+  const res = NextResponse.json(slots);
+  res.headers.set("Cache-Control", "public, s-maxage=15, stale-while-revalidate=60");
+  return res;
 }

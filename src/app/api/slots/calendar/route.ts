@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
 
   try {
     const result = await getAvailableDatesForMonth(year, month);
-    return NextResponse.json(result);
+    const res = NextResponse.json(result);
+    res.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=120");
+    return res;
   } catch (err) {
     console.error("Calendar API error:", err);
     return NextResponse.json(

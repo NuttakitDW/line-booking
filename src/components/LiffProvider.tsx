@@ -33,9 +33,15 @@ export function LiffProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function init() {
       try {
+        // Start LIFF init and prefetch services in parallel
+        const servicesPromise = fetch("/api/services").then((r) => r.ok ? r.json() : []).catch(() => []);
+
         await initLiff();
         if (liff.isLoggedIn()) {
-          const p = await liff.getProfile();
+          const [p] = await Promise.all([
+            liff.getProfile(),
+            servicesPromise, // ensure services are cached by browser
+          ]);
           setProfile({
             userId: p.userId,
             displayName: p.displayName,
