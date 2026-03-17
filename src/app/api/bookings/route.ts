@@ -4,9 +4,9 @@ import { createBeamPayment } from "@/lib/beam";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { lineUserId, displayName, pictureUrl, serviceId, timeSlotId } = body;
+  const { lineUserId, displayName, pictureUrl, serviceId, date, startTime, endTime } = body;
 
-  if (!lineUserId || !displayName || !serviceId || !timeSlotId) {
+  if (!lineUserId || !displayName || !serviceId || !date || !startTime || !endTime) {
     return NextResponse.json(
       { error: "Missing required fields" },
       { status: 400 }
@@ -14,6 +14,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const slotDate = new Date(date + "T00:00:00");
+
     // Atomic transaction to prevent double-booking
     const result = await prisma.$transaction(async (tx) => {
       // Upsert user by LINE userId
@@ -23,9 +25,16 @@ export async function POST(request: NextRequest) {
         create: { lineUserId, displayName, pictureUrl },
       });
 
-      // Check slot is still available (lock check)
-      const slot = await tx.timeSlot.findUnique({
-        where: { id: timeSlotId },
+      // Upsert the time slot (dynamic slots don't pre-exist in DB)
+      const slot = await tx.timeSlot.upsert({
+        where: { date_startTime: { date: slotDate, startTime } },
+        update: {},
+        create: {
+          date: slotDate,
+          startTime,
+          endTime,
+          available: true,
+        },
         include: {
           bookings: {
             where: { status: { in: ["PENDING", "CONFIRMED"] } },
@@ -33,7 +42,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      if (!slot || !slot.available || slot.bookings.length > 0) {
+      if (!slot.available || slot.bookings.length > 0) {
         throw new Error("คิวนี้ถูกจองแล้ว กรุณาเลือกคิวอื่น");
       }
 

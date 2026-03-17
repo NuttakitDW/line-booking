@@ -16,7 +16,6 @@ interface Service {
 }
 
 interface TimeSlot {
-  id: string;
   date: string;
   startTime: string;
   endTime: string;
@@ -59,7 +58,9 @@ export function ConfirmBooking({ profile, service, slot }: Props) {
           displayName: profile.displayName,
           pictureUrl: profile.pictureUrl,
           serviceId: service.id,
-          timeSlotId: slot.id,
+          date: slot.date,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
         }),
       });
 

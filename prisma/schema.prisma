@@ -72,3 +72,44 @@ enum BookingStatus {
   CANCELLED
   COMPLETED
 }
+
+model Schedule {
+  id           String   @id @default(cuid())
+  dayOfWeek    Int      @map("day_of_week") // 0=Sun..6=Sat
+  startTime    String   @map("start_time")  // "09:00"
+  endTime      String   @map("end_time")    // "18:00"
+  slotDuration Int      @map("slot_duration") // minutes
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([dayOfWeek])
+  @@map("schedules")
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([date])
+  @@map("blocked_dates")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  @@map("settings")
+}
