@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createBeamPayment } from "@/lib/beam";
+import { sendBookingReceipt } from "@/lib/line";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -91,6 +92,16 @@ export async function POST(request: NextRequest) {
         data: { status: "AWAITING_CONFIRM" },
       });
     }
+
+    // Send LINE receipt (non-blocking)
+    sendBookingReceipt(lineUserId, {
+      serviceName: service.name,
+      date,
+      startTime,
+      endTime,
+      totalPrice: booking.totalPrice,
+      bookingId: booking.id,
+    }).catch((err) => console.error("Failed to send LINE receipt:", err));
 
     return NextResponse.json({
       bookingId: booking.id,

@@ -36,8 +36,9 @@ export function BookingFlow({ profile }: { profile: Profile }) {
 
   useEffect(() => {
     fetch("/api/services")
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : []))
       .then((data) => setServices(data))
+      .catch(() => setServices([]))
       .finally(() => setLoading(false));
   }, []);
 
