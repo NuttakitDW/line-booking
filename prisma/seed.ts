@@ -28,42 +28,34 @@ async function main() {
   const services = await Promise.all([
     prisma.service.create({
       data: {
-        name: "ตัดผมชาย",
-        description: "ตัดผม สระผม เป่าแห้ง",
-        durationMin: 45,
-        price: 30000, // ฿300
-      },
-    }),
-    prisma.service.create({
-      data: {
-        name: "ตัดผมหญิง",
-        description: "ตัดผม สระผม ไดร์จัดทรง",
+        name: "ผ่าดวงกับโค้ชแกงส้ม",
+        description: null,
         durationMin: 60,
-        price: 50000, // ฿500
+        price: 0,
       },
     }),
     prisma.service.create({
       data: {
-        name: "ทำสีผม",
-        description: "ย้อมสีผม พร้อมทรีทเมนท์",
-        durationMin: 120,
-        price: 150000, // ฿1,500
+        name: "จัดฮวงจุ้ยกับโค้ชแกงส้ม",
+        description: null,
+        durationMin: 60,
+        price: 0,
       },
     }),
     prisma.service.create({
       data: {
-        name: "ดัดผม",
-        description: "ดัดผม ดิจิตอลเพิร์ม",
-        durationMin: 150,
-        price: 200000, // ฿2,000
+        name: "หาฤกษ์ยามกับโค้ชแกงส้ม",
+        description: null,
+        durationMin: 60,
+        price: 0,
       },
     }),
     prisma.service.create({
       data: {
-        name: "ทรีทเมนท์",
-        description: "บำรุงเส้นผม ดูแลหนังศีรษะ",
-        durationMin: 30,
-        price: 80000, // ฿800
+        name: "Exclusive Private Coaching",
+        description: null,
+        durationMin: 60,
+        price: 0,
       },
     }),
   ]);
