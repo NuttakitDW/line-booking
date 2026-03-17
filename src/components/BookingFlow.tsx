@@ -25,7 +25,7 @@ interface TimeSlot {
   endTime: string;
 }
 
-type Step = "service" | "slot" | "confirm";
+type Step = "service" | "slot";
 
 export function BookingFlow({ profile }: { profile: Profile }) {
   const [step, setStep] = useState<Step>("service");
@@ -48,16 +48,12 @@ export function BookingFlow({ profile }: { profile: Profile }) {
 
   function handleSlotSelect(slot: TimeSlot) {
     setSelectedSlot(slot);
-    setStep("confirm");
   }
 
   function handleBack() {
     if (step === "slot") {
       setSelectedSlot(null);
       setStep("service");
-    } else if (step === "confirm") {
-      setSelectedSlot(null);
-      setStep("slot");
     }
   }
 
@@ -82,9 +78,9 @@ export function BookingFlow({ profile }: { profile: Profile }) {
         <p className="text-sm opacity-80 mt-1">เลือกบริการและเวลาที่สะดวก</p>
       </div>
 
-      {/* Step indicator */}
+      {/* Step indicator - now 2 steps */}
       <div className="flex items-center justify-center gap-2 py-4">
-        {(["service", "slot", "confirm"] as Step[]).map((s, i) => (
+        {(["service", "slot"] as Step[]).map((s, i) => (
           <div key={s} className="flex items-center gap-2">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
@@ -95,7 +91,7 @@ export function BookingFlow({ profile }: { profile: Profile }) {
             >
               {i + 1}
             </div>
-            {i < 2 && <div className="w-8 h-0.5 bg-gray-200" />}
+            {i < 1 && <div className="w-8 h-0.5 bg-gray-200" />}
           </div>
         ))}
       </div>
@@ -125,14 +121,17 @@ export function BookingFlow({ profile }: { profile: Profile }) {
             onSelect={handleSlotSelect}
           />
         )}
-        {step === "confirm" && selectedService && selectedSlot && (
-          <ConfirmBooking
-            profile={profile}
-            service={selectedService}
-            slot={selectedSlot}
-          />
-        )}
       </div>
+
+      {/* Confirm popup */}
+      {selectedSlot && selectedService && (
+        <ConfirmBooking
+          profile={profile}
+          service={selectedService}
+          slot={selectedSlot}
+          onClose={() => setSelectedSlot(null)}
+        />
+      )}
     </div>
   );
 }

@@ -1,11 +1,37 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
+import liff from "@line/liff";
+
+const LIFF_ID = process.env.NEXT_PUBLIC_LIFF_ID!;
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("id");
+  const [countdown, setCountdown] = useState(3);
+
+  useEffect(() => {
+    // Initialize LIFF first, then start countdown
+    liff.init({ liffId: LIFF_ID }).catch(() => {});
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          if (liff.isInClient()) {
+            liff.closeWindow();
+          } else {
+            window.close();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
@@ -16,11 +42,14 @@ function SuccessContent() {
       </p>
       {bookingId && (
         <p className="text-sm text-[var(--color-text-secondary)]">
-          รหัสการจอง: {bookingId}
+          รหัสการจอง: {bookingId.slice(-6).toUpperCase()}
         </p>
       )}
       <p className="text-sm text-[var(--color-text-secondary)] mt-4">
         คุณจะได้รับข้อความยืนยันผ่าน LINE ค่ะ
+      </p>
+      <p className="text-sm text-gray-400 mt-6">
+        ปิดหน้าต่างอัตโนมัติใน {countdown} วินาที...
       </p>
     </div>
   );

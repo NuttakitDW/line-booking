@@ -127,7 +127,7 @@ export async function sendBookingReceipt(
                       },
                       {
                         type: "text",
-                        text: receipt.bookingId.slice(0, 8).toUpperCase(),
+                        text: receipt.bookingId.slice(-6).toUpperCase(),
                         size: "sm",
                         align: "end",
                         weight: "bold",

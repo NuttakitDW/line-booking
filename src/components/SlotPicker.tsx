@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { MonthCalendar } from "./MonthCalendar";
 import { TimeSlotList } from "./TimeSlotList";
 
@@ -16,6 +16,7 @@ interface Props {
 }
 
 export function SlotPicker({ serviceId: _serviceId, onSelect }: Props) {
+  const timeSlotsRef = useRef<HTMLDivElement>(null);
   const [availableDates, setAvailableDates] = useState<Set<string>>(new Set());
   const [maxDate, setMaxDate] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -50,7 +51,12 @@ export function SlotPicker({ serviceId: _serviceId, onSelect }: Props) {
     setSlots([]);
     fetch(`/api/slots/date?date=${date}`)
       .then((res) => res.json())
-      .then((data) => setSlots(data))
+      .then((data) => {
+        setSlots(data);
+        setTimeout(() => {
+          timeSlotsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      })
       .finally(() => setLoadingSlots(false));
   }
 
@@ -83,7 +89,7 @@ export function SlotPicker({ serviceId: _serviceId, onSelect }: Props) {
 
       {/* Time slots - right side on desktop, below on mobile */}
       {selectedDate && (
-        <div className="flex-1 min-w-0 md:border-l md:pl-6 md:border-gray-200">
+        <div ref={timeSlotsRef} className="flex-1 min-w-0 md:border-l md:pl-6 md:border-gray-200">
           <TimeSlotList
             date={selectedDate}
             slots={slots}
